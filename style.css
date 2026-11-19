@@ -1,0 +1,123 @@
+:root {
+  --bg: #fff8dc;          /* latar halaman: krem lembut */
+  --kalkulator: #ffe9a0;  /* badan kalkulator: kuning pastel */
+  --layar: #fffdf2;       /* layar: krem terang */
+  --tombol: #fffaf0;      /* tombol angka */
+  --ilmiah: #f6d776;      /* tombol sin cos tan akar */
+  --operator: #ffd3a3;    /* tombol operator: peach */
+  --spesial: #ffb8b0;     /* C dan DEL: pink pastel */
+  --samadengan: #c8e6b0;  /* tombol =: hijau pastel */
+  --teks: #6b5424;        /* cokelat lembut */
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: var(--bg);
+  font-family: Arial, sans-serif;
+  color: var(--teks);
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+}
+
+.kalkulator {
+  background-color: var(--kalkulator);
+  padding: 20px;
+  border-radius: 20px;
+  width: 260px;
+  box-shadow: 0 8px 20px rgba(214, 170, 60, 0.35);
+}
+
+#layar {
+  width: 100%;
+  height: 50px;
+  font-size: 24px;
+  text-align: right;
+  margin-bottom: 15px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  background-color: var(--layar);
+  color: var(--teks);
+  -webkit-text-fill-color: var(--teks); /* supaya teks input disabled tidak pudar */
+  border: 2px solid #f3d37a;
+  border-radius: 12px;
+}
+
+.tombol-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+button {
+  height: 50px;
+  font-size: 18px;
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  background: var(--tombol);
+  color: var(--teks);
+  box-shadow: 0 2px 4px rgba(150, 110, 20, 0.15);
+  transition: transform 0.1s, filter 0.15s;
+}
+
+button:hover { filter: brightness(0.95); }
+button:active { transform: scale(0.95); }
+
+.tombol-operator { background-color: var(--operator); }
+.tombol-spesial { background-color: var(--spesial); }
+.tombol-sama-dengan {
+  background-color: var(--samadengan);
+  grid-row: span 2;
+  height: 110px;
+}
+.tombol-nol { grid-column: span 2; }
+.tombol-ilmiah { background-color: var(--ilmiah); font-weight: bold; }
+
+.panel-riwayat {
+  background: var(--layar);
+  padding: 20px;
+  border-radius: 20px;
+  width: 200px;
+  box-shadow: 0 8px 20px rgba(214, 170, 60, 0.25);
+  border: 2px solid #ffe9a0;
+}
+
+.panel-riwayat h3 {
+  margin-top: 0;
+  border-bottom: 2px solid #ffe9a0;
+  padding-bottom: 10px;
+}
+
+#daftar-riwayat { list-style: none; padding: 0; }
+#daftar-riwayat li { padding: 5px 0; border-bottom: 1px dashed #f3d37a; }
+
+.bar-atas {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.tombol-ikon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--teks);
+  border-radius: 50%;
+  box-shadow: none;
+}
+
+.tombol-ikon:hover { background-color: #ffd96b; filter: none; }
+
+/* Panel riwayat disembunyikan dulu */
+.panel-riwayat { display: none; }
+.panel-riwayat.tampil { display: block; }
