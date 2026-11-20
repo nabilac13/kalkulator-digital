@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kalkulator Ilmiah Pro</title>
+  <title>Kalkulatorku</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <div class="kalkulator">
       <div class="bar-atas">
+        <button id="tombol-sudut" class="tombol-sudut" onclick="ubahSudut()" aria-label="Satuan sudut: derajat atau radian">DEG</button>
         <button id="tombol-riwayat" class="tombol-ikon" onclick="toggleRiwayat()" aria-label="Riwayat">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
             <path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
@@ -17,7 +18,7 @@
         </button>
       </div>
 
-      <input type="text" id="layar" disabled>
+      <div id="layar" aria-live="polite"></div>
 
       <div class="tombol-grid">
         <!-- Ilmiah -->
@@ -26,10 +27,14 @@
         <button onclick="hitungIlmiah('tan')" class="tombol-ilmiah">tan</button>
         <button onclick="hitungIlmiah('sqrt')" class="tombol-ilmiah">√</button>
 
+        <!-- Kurung -->
+        <button onclick="masukkanNilai('(')" class="tombol-ilmiah tombol-kurung">(</button>
+        <button onclick="masukkanNilai(')')" class="tombol-ilmiah tombol-kurung">)</button>
+
         <!-- Dasar -->
         <button onclick="bersihkanLayar()" class="tombol-spesial">C</button>
         <button onclick="masukkanNilai('/')" class="tombol-operator">/</button>
-        <button onclick="masukkanNilai('*')" class="tombol-operator">x</button>
+        <button onclick="masukkanNilai('×')" class="tombol-operator">×</button>
         <button onclick="hapusSatu()" class="tombol-spesial">DEL</button>
 
         <button onclick="masukkanNilai('7')">7</button>
@@ -50,11 +55,16 @@
         <button onclick="masukkanNilai('0')" class="tombol-nol">0</button>
         <button onclick="masukkanNilai('.')">.</button>
       </div>
-    </div>
 
-    <div class="panel-riwayat">
-      <h3>Riwayat (Max 5)</h3>
-      <ul id="daftar-riwayat"></ul>
+      <!-- Riwayat: tampil di dalam kalkulator, menggantikan tombol -->
+      <div class="panel-riwayat">
+        <div class="header-riwayat">
+          <h3>Riwayat</h3>
+          <button class="tombol-kembali" onclick="toggleRiwayat()">← Kembali</button>
+        </div>
+        <ul id="daftar-riwayat"></ul>
+        <p class="riwayat-kosong">Belum ada perhitungan.</p>
+      </div>
     </div>
   </div>
 

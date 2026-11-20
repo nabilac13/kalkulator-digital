@@ -1,22 +1,33 @@
 :root {
-  --bg: #fff8dc;          /* latar halaman: krem lembut */
-  --kalkulator: #ffe9a0;  /* badan kalkulator: kuning pastel */
-  --layar: #fffdf2;       /* layar: krem terang */
-  --tombol: #fffaf0;      /* tombol angka */
-  --ilmiah: #f6d776;      /* tombol sin cos tan akar */
-  --operator: #ffd3a3;    /* tombol operator: peach */
-  --spesial: #ffb8b0;     /* C dan DEL: pink pastel */
-  --samadengan: #c8e6b0;  /* tombol =: hijau pastel */
-  --teks: #6b5424;        /* cokelat lembut */
+  /* Ukuran kalkulator otomatis mengikuti tinggi layar (lebih besar di desktop).
+     Mau lebih besar/kecil? Ubah angka batas di --tinggi-tombol: clamp(minimum, ..., maksimum) */
+  --tinggi-tombol: clamp(52px, calc((100vh - 150px) / 10), 96px); /* menyesuaikan tinggi layar */
+  --lebar: clamp(320px, calc(var(--tinggi-tombol) * 5.6), 540px);
+  --jarak: calc(var(--tinggi-tombol) * 0.2);
+  --font-tombol: calc(var(--tinggi-tombol) * 0.36);
+  --tinggi-layar: calc(var(--tinggi-tombol) * 1.7);
+
+  --burgundy: #59171b;     /* warna utama dari referensi */
+  --burgundy-mid: #8a4a45; /* transisi gradasi */
+  --peach: #fed7b8;        /* warna terang dari referensi */
+  --peach-soft: #fbe6d3;   /* peach lebih pucat untuk teks/permukaan */
+  --rose: #b57d6c;         /* tengah gradasi: rose dusty */
+
+  --layar: #fbe6d3;
+  --teks: #59171b;
+  --teks-terang: #fff1e4;
 }
 
 body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 20px 0;
   margin: 0;
-  background-color: var(--bg);
+  /* gradasi diagonal seperti latar di gambar referensi */
+  background: linear-gradient(135deg, #fff1e4 0%, var(--peach) 40%, #f0b9a0 75%, #d99a86 100%);
   font-family: Arial, sans-serif;
   color: var(--teks);
 }
@@ -27,79 +38,145 @@ body {
 }
 
 .kalkulator {
-  background-color: var(--kalkulator);
+  /* badan kalkulator: gelap di atas, makin terang ke bawah */
+  background: linear-gradient(180deg, var(--burgundy) 0%, #7a3a37 55%, #a8695b 100%);
   padding: 20px;
-  border-radius: 20px;
-  width: 260px;
-  box-shadow: 0 8px 20px rgba(214, 170, 60, 0.35);
+  border-radius: 24px;
+  width: var(--lebar);
+  box-shadow: 8px 10px 22px rgba(40, 8, 10, 0.45);
 }
 
 #layar {
+  display: flex;
   width: 100%;
-  height: 50px;
-  font-size: 24px;
-  text-align: right;
+  height: var(--tinggi-layar);
   margin-bottom: 15px;
-  padding: 5px 10px;
+  padding: 8px 12px;
   box-sizing: border-box;
-  background-color: var(--layar);
+  overflow-y: auto;
+  text-align: right;
+  font-size: calc(var(--tinggi-tombol) * 0.52);
+  background: linear-gradient(180deg, #f3c9a8 0%, var(--layar) 100%);
   color: var(--teks);
-  -webkit-text-fill-color: var(--teks); /* supaya teks input disabled tidak pudar */
-  border: 2px solid #f3d37a;
   border-radius: 12px;
+  box-shadow: inset 0 2px 6px rgba(89, 23, 27, 0.3);
 }
+
+/* Teks panjang dibungkus ke baris baru, bukan terpotong */
+#layar span {
+  margin-top: auto;   /* rata bawah, tapi tetap bisa di-scroll kalau sangat panjang */
+  margin-left: auto;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+/* Makin panjang teks, makin kecil hurufnya (diatur dari script.js) */
+#layar[data-ukuran="m"]  { font-size: calc(var(--tinggi-tombol) * 0.42); }
+#layar[data-ukuran="s"]  { font-size: calc(var(--tinggi-tombol) * 0.34); }
+#layar[data-ukuran="xs"] { font-size: calc(var(--tinggi-tombol) * 0.28); }
 
 .tombol-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: var(--jarak);
 }
 
 button {
-  height: 50px;
-  font-size: 18px;
+  height: var(--tinggi-tombol);
+  font-size: var(--font-tombol);
   cursor: pointer;
   border: none;
   border-radius: 12px;
-  background: var(--tombol);
+  /* tombol angka: gradasi peach */
+  background: linear-gradient(180deg, var(--peach-soft) 0%, var(--peach) 100%);
   color: var(--teks);
-  box-shadow: 0 2px 4px rgba(150, 110, 20, 0.15);
+  box-shadow: 0 3px 6px rgba(40, 8, 10, 0.35);
   transition: transform 0.1s, filter 0.15s;
 }
 
-button:hover { filter: brightness(0.95); }
+button sup { font-size: 13px; }
+button svg { display: block; margin: 0 auto; }
+
+button:hover { filter: brightness(0.94); }
 button:active { transform: scale(0.95); }
 
-.tombol-operator { background-color: var(--operator); }
-.tombol-spesial { background-color: var(--spesial); }
+/* operator: rose dusty, teks terang */
+.tombol-operator {
+  background: linear-gradient(180deg, #c48c7b 0%, #a56a5c 100%);
+  color: var(--teks-terang);
+}
+
+/* C dan DEL: burgundy gelap, teks peach */
+.tombol-spesial {
+  background: linear-gradient(180deg, #7a2a2e 0%, var(--burgundy) 100%);
+  color: var(--peach);
+}
+
+/* tombol =: peach penuh, jadi titik fokus */
 .tombol-sama-dengan {
-  background-color: var(--samadengan);
+  background: linear-gradient(180deg, var(--peach) 0%, #e8b393 100%);
+  color: var(--burgundy);
+  font-weight: bold;
   grid-row: span 2;
-  height: 110px;
+  height: calc(2 * var(--tinggi-tombol) + var(--jarak));
 }
+
 .tombol-nol { grid-column: span 2; }
-.tombol-ilmiah { background-color: var(--ilmiah); font-weight: bold; }
+.tombol-kurung { grid-column: span 2; }
 
+/* fungsi ilmiah: burgundy tengah */
+.tombol-ilmiah {
+  background: linear-gradient(180deg, var(--burgundy-mid) 0%, #6b2d2f 100%);
+  color: var(--peach);
+  font-weight: bold;
+}
+
+/* Riwayat: menggantikan area tombol di dalam kalkulator */
 .panel-riwayat {
-  background: var(--layar);
-  padding: 20px;
-  border-radius: 20px;
-  width: 200px;
-  box-shadow: 0 8px 20px rgba(214, 170, 60, 0.25);
-  border: 2px solid #ffe9a0;
+  display: none;
+  height: calc(7 * var(--tinggi-tombol) + 6 * var(--jarak)); /* sama dengan tinggi grid tombol (7 baris) */
+  box-sizing: border-box;
+  padding: 14px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--peach-soft) 0%, var(--peach) 100%);
+  box-shadow: inset 0 2px 6px rgba(89, 23, 27, 0.25);
+  overflow-y: auto;
 }
 
-.panel-riwayat h3 {
-  margin-top: 0;
-  border-bottom: 2px solid #ffe9a0;
+.header-riwayat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--burgundy);
   padding-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-#daftar-riwayat { list-style: none; padding: 0; }
-#daftar-riwayat li { padding: 5px 0; border-bottom: 1px dashed #f3d37a; }
+.header-riwayat h3 { margin: 0; font-size: 16px; }
+
+.tombol-kembali {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 14px;
+  background: linear-gradient(180deg, #7a2a2e 0%, var(--burgundy) 100%);
+  color: var(--peach);
+}
+
+#daftar-riwayat { list-style: none; padding: 0; margin: 0; }
+#daftar-riwayat li {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--rose);
+  word-break: break-all;
+}
+
+.riwayat-kosong { margin: 0; font-size: 14px; opacity: 0.7; }
+#daftar-riwayat:not(:empty) + .riwayat-kosong { display: none; }
 
 .bar-atas {
   display: flex;
+  justify-content: space-between; /* DEG/RAD di kiri, ikon riwayat di kanan */
+  align-items: center;
   margin-bottom: 10px;
 }
 
@@ -111,13 +188,32 @@ button:active { transform: scale(0.95); }
   align-items: center;
   justify-content: center;
   background: transparent;
-  color: var(--teks);
+  color: var(--peach);
   border-radius: 50%;
   box-shadow: none;
 }
 
-.tombol-ikon:hover { background-color: #ffd96b; filter: none; }
+.tombol-ikon:hover { background: rgba(254, 215, 184, 0.2); filter: none; }
 
-/* Panel riwayat disembunyikan dulu */
-.panel-riwayat { display: none; }
-.panel-riwayat.tampil { display: block; }
+/* Mode riwayat: sembunyikan tombol, tampilkan riwayat */
+.kalkulator.mode-riwayat .tombol-grid { display: none; }
+.kalkulator.mode-riwayat .panel-riwayat { display: block; }
+
+/* Tombol pilih satuan sudut: DEG (derajat) / RAD (radian) */
+.tombol-sudut {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  background: rgba(254, 215, 184, 0.18);
+  color: var(--peach);
+  border-radius: 16px;
+  box-shadow: none;
+}
+.tombol-sudut:hover { background: rgba(254, 215, 184, 0.3); filter: none; }
+
+/* HP / layar sempit */
+@media (max-width: 420px) {
+  :root { --lebar: calc(100vw - 80px); }
+}
